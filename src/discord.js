@@ -22,10 +22,8 @@ const onMessage = (message) => {
         emitter.emit('message', parsedMessage);
 
         // Emit the command to all listening bots
-        if (parsedMessage.command) {
-            if (!emitter.emit(parsedMessage.command, parsedMessage)) {
-                message.reply(`\`${parsedMessage.command}\` is not a real command, are you sure you know what you're doing?`);
-            }
+        if (parsedMessage.command && !emitter.emit(parsedMessage.command, parsedMessage)) {
+            message.reply(`\`${parsedMessage.command}\` is not a real command, are you sure you know what you're doing?`);
         }
     }
 };
