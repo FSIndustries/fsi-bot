@@ -32,5 +32,11 @@ module.exports = {
         }));
     },
 
-    emitter
+    emitMessage: (message) => {
+        return emitter.emit('message', message);
+    },
+
+    emitCommand: (message) => {
+        return emitter.emit(message.command, message);
+    }
 };

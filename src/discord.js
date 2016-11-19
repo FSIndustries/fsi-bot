@@ -3,13 +3,12 @@
 const config = require('./config.js');
 const logger = require('./log.js');
 const parser = require('./message.parser.js');
+const botstore = require('./botstore.js');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-let emitter;
-
 const onReady = () => {
-    logger.info('Connected to Discord');
+    logger.info('Successfully connected to Discord, let\'s party!');
 };
 
 const onMessage = (message) => {
@@ -19,10 +18,10 @@ const onMessage = (message) => {
     if (!message.author.bot) {
 
         // Emit the message as a whole first
-        emitter.emit('message', parsedMessage);
+        botstore.emitMessage(parsedMessage);
 
         // Emit the command to all listening bots
-        if (parsedMessage.command && !emitter.emit(parsedMessage.command, parsedMessage)) {
+        if (parsedMessage.command && !botstore.emitCommand(parsedMessage)) {
             message.reply(`\`${parsedMessage.command}\` is not a real command, are you sure you know what you're doing?`);
         }
     }
@@ -30,12 +29,12 @@ const onMessage = (message) => {
 
 module.exports = {
 
-    start: (_emitter) => {
-        emitter = _emitter;
+    start: () => {
 
         client.on('ready', onReady);
         client.on('message', onMessage);
 
+        logger.info('Connecting to Discord, here we go!');
         return client.login(config.get('discord:token'));
     }
 };
