@@ -22,7 +22,6 @@ module.exports = {
 
             // If it starts with a /, parse out the command
             if (_.startsWith(content, '/')) {
-
                 let cmd;
 
                 if (content.indexOf(' ') >= 0) {
@@ -34,7 +33,9 @@ module.exports = {
                 const body = _.trim(content.substring(cmd.length));
                 cmd = _.toLower(cmd.substring(1));
 
-                emitter.emit(cmd, message, body);
+                if (!emitter.emit(cmd, message, body)) {
+                    message.reply(`${cmd} is not a real command, are you sure you know what you're doing?`);
+                }
             }
         });
 
