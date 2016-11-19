@@ -1,43 +1,42 @@
 'use strict';
 
-const _ = require('lodash');
 const config = require('./config.js');
 const logger = require('./log.js');
+const parser = require('./message.parser.js');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+let emitter;
+
+const onReady = () => {
+    logger.info('Connected to Discord');
+};
+
+const onMessage = (message) => {
+    const parsedMessage = parser.parse(message);
+
+    // Ignore messages from bots
+    if (!message.author.bot) {
+
+        // Emit the message as a whole first
+        emitter.emit('message', parsedMessage);
+
+        // Emit the command to all listening bots
+        if (parsedMessage.command) {
+            if (!emitter.emit(parsedMessage.command, parsedMessage)) {
+                message.reply(`${parsedMessage.command} is not a real command, are you sure you know what you're doing?`);
+            }
+        }
+    }
+};
+
 module.exports = {
 
-    start: (emitter) => {
+    start: (_emitter) => {
+        emitter = _emitter;
 
-        client.on('ready', () => {
-            logger.info('Connected to Discord') ;
-        });
-
-        client.on('message', (message) => {
-            const content = message.content;
-
-            // Emit the message as a whole first
-            emitter.emit('message', message);
-
-            // If it starts with a /, parse out the command
-            if (_.startsWith(content, '/')) {
-                let cmd;
-
-                if (content.indexOf(' ') >= 0) {
-                    cmd = _.split(content, ' ')[0];
-                } else {
-                    cmd = content;
-                }
-
-                const body = _.trim(content.substring(cmd.length));
-                cmd = _.toLower(cmd.substring(1));
-
-                if (!emitter.emit(cmd, message, body)) {
-                    message.reply(`${cmd} is not a real command, are you sure you know what you're doing?`);
-                }
-            }
-        });
+        client.on('ready', onReady);
+        client.on('message', onMessage);
 
         return client.login(config.get('discord:token'));
     }
