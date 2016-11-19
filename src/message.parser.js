@@ -26,7 +26,7 @@ const getContent = (message) => {
     if (isCommand(content)) {
 
         if (hasCommandContent(content)) {
-            return _.drop(_.split(content, ' ')).join(' ');
+            return _.join(_.drop(_.split(content, ' ')), ' ');
         }
         return;
     }
