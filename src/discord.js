@@ -2,7 +2,7 @@
 
 const config = require('./config.js');
 const logger = require('./log.js');
-const parser = require('./message.parser.js');
+const parser = require('./parser.js');
 const botstore = require('./botstore.js');
 const Discord = require('discord.js');
 const client = new Discord.Client();
@@ -12,7 +12,7 @@ const onReady = () => {
 };
 
 const onMessage = (message) => {
-    const parsedMessage = parser.parse(message);
+    const parsedMessage = parser.parseMessage(message);
 
     // Ignore messages from bots
     if (!message.author.bot) {
@@ -27,12 +27,17 @@ const onMessage = (message) => {
     }
 };
 
+const onReaction = (reaction) => {
+    logger.info('Got a reaction!');
+};
+
 module.exports = {
 
     start: () => {
 
         client.on('ready', onReady);
         client.on('message', onMessage);
+        client.on('messageReactionAdd', onReaction);
 
         logger.info('Connecting to Discord, here we go!');
         return client.login(config.get('discord:token'));

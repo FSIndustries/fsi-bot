@@ -17,7 +17,7 @@ const getCommand = (message) => {
         if (hasCommandContent(command)) {
             command = _.split(command, ' ')[0];
         }
-        return _.toLower(command.substring(1));
+        return command.substring(1);
     }
 };
 
@@ -35,7 +35,7 @@ const getContent = (message) => {
 
 module.exports = {
 
-    parse: (message) => {
+    parseMessage: (message) => {
         return _.assign(message, {
             command: getCommand(message),
             content: getContent(message),
