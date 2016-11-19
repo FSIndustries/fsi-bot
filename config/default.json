@@ -1,0 +1,8 @@
+{
+    "log": {
+        "level": "info"
+    },
+    "discord":{
+        "token": "__REPLACE__"
+    }
+}
