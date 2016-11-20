@@ -1,44 +1,16 @@
 'use strict';
 
-const _ = require('lodash');
-const config = require('./config.js');
-const logger = require('./log.js');
+const config = require('./util/config.js');
+const botRouter = require('./bot.router.js');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
 module.exports = {
 
-    start: (emitter) => {
-
-        client.on('ready', () => {
-            logger.info('Connected to Discord') ;
-        });
-
-        client.on('message', (message) => {
-            const content = message.content;
-
-            // Emit the message as a whole first
-            emitter.emit('message', message);
-
-            // If it starts with a /, parse out the command
-            if (_.startsWith(content, '/')) {
-                let cmd;
-
-                if (content.indexOf(' ') >= 0) {
-                    cmd = _.split(content, ' ')[0];
-                } else {
-                    cmd = content;
-                }
-
-                const body = _.trim(content.substring(cmd.length));
-                cmd = _.toLower(cmd.substring(1));
-
-                if (!emitter.emit(cmd, message, body)) {
-                    message.reply(`${cmd} is not a real command, are you sure you know what you're doing?`);
-                }
-            }
-        });
-
+    start: () => {
+        client.on('ready', botRouter.onReady);
+        client.on('message', botRouter.onMessage);
+        client.on('messageReactionAdd', botRouter.onReaction);
         return client.login(config.get('discord:token'));
     }
 };
