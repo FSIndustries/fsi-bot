@@ -1,3 +1,3 @@
 'use strict';
 
-require('./src/botloader.js');
+require('./src');
