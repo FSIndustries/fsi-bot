@@ -22,15 +22,8 @@ const onMessage = (message) => {
         botstore.emitMessage(parsedMessage);
 
         // Emit the command to all listening bots
-        if (parsedMessage.command) {
-
-            if (parsedMessage.allCapsCommand) {
-                message.reply('Hey now, no need to yell. Chill out dummy.');
-            }
-
-            if (!botstore.emitCommand(message)) {
-                message.reply(`\`${parsedMessage.command}\` is not a real command, are you sure you know what you're doing?`);
-            }
+        if (parsedMessage.command && !botstore.emitCommand(message)) {
+            message.reply(`\`${parsedMessage.command}\` is not a real command, are you sure you know what you're doing?`);
         }
     }
 };

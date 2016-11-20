@@ -36,16 +36,9 @@ const getContent = (message) => {
 module.exports = {
 
     parseMessage: (message) => {
-        const msg = _.assign(message, {
+        return _.assign(message, {
             command: getCommand(message),
             content: getContent(message),
-            allCapsCommand: false
         });
-
-        if (msg.command === _.toUpper(msg.command)) {
-            msg.allCapsCommand = true;
-        }
-
-        return msg;
     }
 };
