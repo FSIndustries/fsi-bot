@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+const emojione = require('emojione');
 
 const isCommand = (message) => {
     return _.startsWith(message, '/');
@@ -33,6 +34,20 @@ const getContent = (message) => {
     return content;
 };
 
+const getEmojiName = (emoji) => {
+    let name = emojione.toShort(emoji.name);
+
+    if (_.startsWith(name, ':')) {
+        name = name.substring(1);
+    }
+
+    if (_.endsWith(name, ':')) {
+        name = name.substring(0, name.length - 1);
+    }
+
+    return name;
+};
+
 module.exports = {
 
     parseMessage: (message) => {
@@ -44,7 +59,8 @@ module.exports = {
 
     parseReaction: (reaction, user) => {
         return _.assign(reaction, {
-            user
+            user,
+            emojiName: getEmojiName(reaction.emoji)
         });
     }
 };
