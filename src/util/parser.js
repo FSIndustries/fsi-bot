@@ -40,5 +40,9 @@ module.exports = {
             command: getCommand(message),
             content: getContent(message),
         });
+    },
+
+    parseReaction: (reaction) => {
+        return reaction;
     }
 };

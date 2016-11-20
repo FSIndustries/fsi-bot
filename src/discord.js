@@ -1,46 +1,16 @@
 'use strict';
 
-const config = require('./config.js');
-const logger = require('./log.js');
-const parser = require('./parser.js');
-const botstore = require('./botstore.js');
+const config = require('./util/config.js');
+const botRouter = require('./bot.router.js');
 const Discord = require('discord.js');
 const client = new Discord.Client();
-
-const onReady = () => {
-    logger.info('Successfully connected to Discord, let\'s party!');
-    botstore.emitStart();
-};
-
-const onMessage = (message) => {
-    const parsedMessage = parser.parseMessage(message);
-
-    // Ignore messages from bots
-    if (!message.author.bot) {
-
-        // Emit the message as a whole first
-        botstore.emitMessage(parsedMessage);
-
-        // Emit the command to all listening bots
-        if (parsedMessage.command && !botstore.emitCommand(message)) {
-            message.reply(`\`${parsedMessage.command}\` is not a real command, are you sure you know what you're doing?`);
-        }
-    }
-};
-
-const onReaction = (reaction) => {
-    logger.info('Got a reaction!');
-};
 
 module.exports = {
 
     start: () => {
-
-        client.on('ready', onReady);
-        client.on('message', onMessage);
-        client.on('messageReactionAdd', onReaction);
-
-        logger.info('Connecting to Discord, here we go!');
+        client.on('ready', botRouter.onReady);
+        client.on('message', botRouter.onMessage);
+        client.on('messageReactionAdd', botRouter.onReaction);
         return client.login(config.get('discord:token'));
     }
 };
