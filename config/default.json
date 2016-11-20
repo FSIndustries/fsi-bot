@@ -3,6 +3,9 @@
         "level": "info"
     },
     "discord":{
-        "token": "__REPLACE__"
+        "token": "___REPLACE___"
+    },
+    "chess":{
+        "debug": "1"
     }
 }
