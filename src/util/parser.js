@@ -42,7 +42,9 @@ module.exports = {
         });
     },
 
-    parseReaction: (reaction) => {
-        return reaction;
+    parseReaction: (reaction, user) => {
+        return _.assign(reaction, {
+            user
+        });
     }
 };
