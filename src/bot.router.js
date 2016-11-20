@@ -25,7 +25,7 @@ module.exports = {
         }
     },
 
-    onReaction: (reaction) => {
-        botEmitter.emitReaction(parser.parseReaction(reaction));
+    onReaction: (reaction, user) => {
+        botEmitter.emitReaction(parser.parseReaction(reaction, user));
     }
 };

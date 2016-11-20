@@ -62,6 +62,6 @@ module.exports = {
 
     emitReaction: (reaction) => {
         emitter.emit(reactionEvent, reaction);
-        emitter.emit(specificReactionEvent(reaction));
+        emitter.emit(specificReactionEvent(reaction.emojiName), reaction);
     }
 };
