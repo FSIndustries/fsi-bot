@@ -9,6 +9,7 @@ const client = new Discord.Client();
 
 const onReady = () => {
     logger.info('Successfully connected to Discord, let\'s party!');
+    botstore.emitStart();
 };
 
 const onMessage = (message) => {

@@ -24,6 +24,10 @@ module.exports = {
             try {
                 const bot = require(`${botDir}/${file}`);
 
+                if (_.isFunction(bot.onStart)) {
+                    emitter.on('start', bot.onStart);
+                }
+
                 if (_.isObject(bot.onCommand)) {
                     _.each(_.keysIn(bot.onCommand), (key) => {
                         if (_.isFunction(bot.onCommand[key])) {
@@ -56,6 +60,10 @@ module.exports = {
         return Promise.resolve(_.filter(loadedBots, (bot) => {
             return !!bot;
         }));
+    },
+
+    emitStart: () => {
+        return emitter.emit('start');
     },
 
     emitMessage: (message) => {
